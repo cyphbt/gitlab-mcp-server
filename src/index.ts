@@ -21,6 +21,16 @@ let gitlabConfig: GitLabConfig | null = null;
 let gitlabClient: GitLabClient | SSHGitLabClient | null = null;
 let useSSHMode = false;
 
+// 获取当前分支
+function getCurrentBranch(): string | null {
+  try {
+    const { execSync } = require('child_process');
+    return execSync('git branch --show-current', { encoding: 'utf8' }).trim();
+  } catch (error) {
+    return null;
+  }
+}
+
 // 初始化 GitLab 配置
 async function initializeGitLabConfig(): Promise<void> {
   try {
@@ -44,11 +54,34 @@ async function initializeGitLabConfig(): Promise<void> {
 
 // 初始化 Token 模式
 async function initializeTokenMode(token: string): Promise<void> {
+  // 优先使用手动配置
+  const manualUrl = process.env.GITLAB_URL;
+  const manualProjectId = process.env.GITLAB_PROJECT_ID;
+  
+  if (manualUrl && manualProjectId) {
+    // 使用手动配置
+    const currentBranch = getCurrentBranch();
+    
+    gitlabConfig = {
+      url: manualUrl,
+      token,
+      projectId: manualProjectId,
+      defaultBranch: currentBranch || 'main',
+    };
+
+    gitlabClient = new GitLabClient(gitlabConfig);
+    useSSHMode = false;
+    
+    console.error(`✅ Token 模式 - 使用手动配置: ${manualUrl} (ID: ${manualProjectId})`);
+    console.error(`📍 当前分支: ${currentBranch || 'main'}`);
+    return;
+  }
+
   // 自动检测 GitLab 配置
   const detectedConfig = await GitDetector.detectGitLabConfig(token);
   
   if (!detectedConfig) {
-    throw new Error('无法检测 GitLab 配置');
+    throw new Error('无法检测 GitLab 配置，请在 .env 文件中手动设置 GITLAB_URL 和 GITLAB_PROJECT_ID');
   }
 
   gitlabConfig = {
@@ -67,6 +100,30 @@ async function initializeTokenMode(token: string): Promise<void> {
 
 // 初始化 SSH 模式
 async function initializeSSHMode(): Promise<void> {
+  // 优先使用手动配置
+  const manualUrl = process.env.GITLAB_URL;
+  const manualProjectId = process.env.GITLAB_PROJECT_ID;
+  
+  if (manualUrl && manualProjectId) {
+    // 使用手动配置
+    const currentBranch = getCurrentBranch();
+    
+    gitlabConfig = {
+      url: manualUrl,
+      token: '', // SSH 模式不需要 token
+      projectId: manualProjectId,
+      defaultBranch: currentBranch || 'main',
+    };
+
+    gitlabClient = new SSHGitLabClient(gitlabConfig);
+    useSSHMode = true;
+    
+    console.error(`✅ SSH 模式 - 使用手动配置: ${manualUrl} (ID: ${manualProjectId})`);
+    console.error(`📍 当前分支: ${currentBranch || 'main'}`);
+    console.error(`🔧 使用 Git 命令和 GitLab CLI 进行操作`);
+    return;
+  }
+
   // 检测 Git 仓库信息
   const gitInfo = GitDetector.detectGitInfo();
   
@@ -77,7 +134,7 @@ async function initializeSSHMode(): Promise<void> {
   const gitlabInfo = GitDetector.parseGitLabInfo(gitInfo);
   
   if (!gitlabInfo) {
-    throw new Error('无法解析 GitLab 仓库信息');
+    throw new Error('无法解析 GitLab 仓库信息，请在 .env 文件中手动设置 GITLAB_URL 和 GITLAB_PROJECT_ID');
   }
 
   // 测试 SSH 连接
