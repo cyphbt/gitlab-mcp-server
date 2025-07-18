@@ -358,12 +358,15 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 // 启动服务器
 async function main() {
   try {
-    // 初始化 GitLab 配置
-    await initializeGitLabConfig();
-    
+    // 立即启动服务器，不等待 GitLab 配置初始化
     const transport = new StdioServerTransport();
     await server.connect(transport);
     console.error('GitLab MCP 服务器已启动');
+    
+    // 在后台初始化 GitLab 配置
+    initializeGitLabConfig().catch(error => {
+      console.error(`⚠️ GitLab 配置初始化失败: ${error instanceof Error ? error.message : '未知错误'}`);
+    });
   } catch (error) {
     console.error(`❌ 服务器启动失败: ${error instanceof Error ? error.message : '未知错误'}`);
     process.exit(1);
