@@ -1,6 +1,6 @@
   {
     "name": "@cyphbt/gitlab-mcp-server",
-    "version": "1.0.1",
+    "version": "1.0.2",
   "description": "GitLab MCP Server with tag and merge request functionality - supports both Token and SSH modes",
   "main": "dist/index.js",
   "bin": {

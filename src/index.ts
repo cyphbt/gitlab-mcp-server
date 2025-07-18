@@ -203,6 +203,7 @@ const server = new Server(
 
 // 处理工具列表请求
 server.setRequestHandler(ListToolsRequestSchema, async () => {
+  // 立即返回工具列表，不等待 GitLab 初始化
   return {
     tools,
   };
