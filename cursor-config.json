@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "gitlab": {
+      "command": "node",
+      "args": ["/Users/cyp/mobby/mcp/gitlab/dist/index.js"],
+      "env": {
+        "GITLAB_TOKEN": "your_gitlab_personal_access_token"
+      }
+    }
+  }
+} 

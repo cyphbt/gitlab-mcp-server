@@ -1,0 +1,58 @@
+  {
+    "name": "@cyphbt/gitlab-mcp-server",
+    "version": "1.0.1",
+  "description": "GitLab MCP Server with tag and merge request functionality - supports both Token and SSH modes",
+  "main": "dist/index.js",
+  "bin": {
+    "gitlab-mcp": "dist/index.js"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "test": "jest",
+    "test:detect": "node test-auto-detect.js",
+    "test:server": "node test.js",
+    "prepublishOnly": "npm run build",
+    "prepack": "npm run build",
+    "publish:interactive": "./scripts/publish.sh"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.4.0",
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.0",
+    "tsx": "^4.6.0",
+    "typescript": "^5.2.0"
+  },
+  "keywords": [
+    "mcp",
+    "gitlab",
+    "tags",
+    "merge-requests",
+    "cursor",
+    "ai",
+    "automation"
+  ],
+  "author": "Cui Youpeng",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/gitlab-mcp-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/gitlab-mcp-server/issues"
+  },
+  "homepage": "https://github.com/yourusername/gitlab-mcp-server#readme",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ]
+}

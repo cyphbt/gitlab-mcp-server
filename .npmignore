@@ -1,0 +1,45 @@
+# 源码文件
+src/
+*.ts
+*.tsx
+
+# 开发文件
+test*.js
+test-auto-detect.js
+install-glab.sh
+cursor-config.json
+
+# 文档文件
+QUICKSTART.md
+USAGE.md
+GIT-COMMANDS.md
+PUBLISH.md
+
+# 配置文件
+tsconfig.json
+env.example
+.gitignore
+
+# 开发依赖
+node_modules/
+
+# 构建缓存
+*.tsbuildinfo
+
+# IDE 文件
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS 文件
+.DS_Store
+Thumbs.db
+
+# 日志文件
+*.log
+npm-debug.log*
+
+# 临时文件
+*.tmp
+*.temp 
